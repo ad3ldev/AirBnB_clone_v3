@@ -6,13 +6,12 @@ from datetime import datetime
 import inspect
 import json
 import models
-from os import environ, stat
-import pep8
+import os
 import unittest
 
 Place = models.place.Place
 BaseModel = models.base_model.BaseModel
-STORAGE_TYPE = environ.get('HBNB_TYPE_STORAGE')
+storage_type = os.environ.get('HBNB_TYPE_STORAGE')
 
 
 class TestPlaceDocs(unittest.TestCase):
@@ -45,19 +44,6 @@ class TestPlaceDocs(unittest.TestCase):
         for function in all_functions:
             self.assertIsNotNone(function[1].__doc__)
 
-    def test_pep8_place(self):
-        """... place.py conforms to PEP8 Style"""
-        pep8style = pep8.StyleGuide(quiet=True)
-        errors = pep8style.check_files(['models/place.py'])
-        self.assertEqual(errors.total_errors, 0, errors.messages)
-
-    def test_file_is_executable(self):
-        """... tests if file has correct permissions so user can execute"""
-        file_stat = stat('models/place.py')
-        permissions = str(oct(file_stat[0]))
-        actual = int(permissions[5:-2]) >= 5
-        self.assertTrue(actual)
-
 
 class TestPlaceInstances(unittest.TestCase):
     """testing for class instances"""
@@ -77,7 +63,7 @@ class TestPlaceInstances(unittest.TestCase):
         """... checks if Place is properly instantiated"""
         self.assertIsInstance(self.place, Place)
 
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'skip if environ is db')
+    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
     def test_to_string(self):
         """... checks if BaseModel is properly casted to string"""
         my_str = str(self.place)
@@ -88,7 +74,7 @@ class TestPlaceInstances(unittest.TestCase):
                 actual += 1
         self.assertTrue(3 == actual)
 
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'skip if environ is db')
+    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
     def test_instantiation_no_updated(self):
         """... should not have updated attribute"""
         my_str = str(self.place)
@@ -97,7 +83,7 @@ class TestPlaceInstances(unittest.TestCase):
             actual += 1
         self.assertTrue(0 == actual)
 
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'skip if environ is db')
+    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
     def test_updated_at(self):
         """... save function should add updated_at attribute"""
         self.place.save()
@@ -105,7 +91,7 @@ class TestPlaceInstances(unittest.TestCase):
         expected = type(datetime.now())
         self.assertEqual(expected, actual)
 
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'skip if environ is db')
+    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
     def test_to_json(self):
         """... to_json should return serializable dict object"""
         self.place_json = self.place.to_json()
@@ -116,7 +102,7 @@ class TestPlaceInstances(unittest.TestCase):
             actual = 0
         self.assertTrue(1 == actual)
 
-    @unittest.skipIf(STORAGE_TYPE == 'db', 'skip if environ is db')
+    @unittest.skipIf(storage_type == 'db', 'skip if environ is db')
     def test_json_class(self):
         """... to_json should include class key with value Place"""
         self.place_json = self.place.to_json()

@@ -55,11 +55,11 @@ class FileStorage:
             serializes __objects to the JSON file (path: __file_path)
         """
         fname = FileStorage.__file_path
-        storage_d = {}
+        d = {}
         for bm_id, bm_obj in FileStorage.__objects.items():
-            storage_d[bm_id] = bm_obj.to_json(saving_file_storage=True)
+            d[bm_id] = bm_obj.to_json()
         with open(fname, mode='w', encoding='utf-8') as f_io:
-            json.dump(storage_d, f_io)
+            json.dump(d, f_io)
 
     def reload(self):
         """
